@@ -1,0 +1,63 @@
+#!/usr/bin/env node
+/**
+ * prompt-injection-guard — scan the files an agent reads automatically.
+ *
+ *   prompt-injection-guard AGENTS.md
+ *   prompt-injection-guard --dir ~/.config/opencode
+ *   prompt-injection-guard --sanitise AGENTS.md
+ */
+import { readFileSync, existsSync, readdirSync, statSync } from "node:fs"
+import { join } from "node:path"
+import { scanFiles, sanitise } from "../src/index.js"
+
+const argv = process.argv.slice(2)
+const arg = (n) => {
+  const i = argv.indexOf(n)
+  return i >= 0 ? argv[i + 1] : undefined
+}
+const dir = arg("--dir")
+const files = []
+if (dir && existsSync(dir)) {
+  const walk = (d, depth = 0) => {
+    if (depth > 3) return
+    for (const e of readdirSync(d)) {
+      if (e.startsWith(".") || e === "node_modules") continue
+      const p = join(d, e)
+      const st = statSync(p)
+      if (st.isDirectory()) walk(p, depth + 1)
+      else if (/\.(md|txt|json|jsonc|ya?ml)$/i.test(e) && st.size < 400_000)
+        files.push({ name: p, content: readFileSync(p, "utf8") })
+    }
+  }
+  walk(dir)
+} else {
+  for (const f of argv.filter((a) => !a.startsWith("--"))) {
+    if (existsSync(f)) files.push({ name: f, content: readFileSync(f, "utf8") })
+  }
+}
+if (!files.length) {
+  console.error("usage: prompt-injection-guard <file...> | --dir <path>")
+  process.exit(2)
+}
+
+if (argv.includes("--sanitise")) {
+  for (const f of files) {
+    const clean = sanitise(f.content)
+    if (clean !== f.content) {
+      console.error(`sanitising ${f.name}`)
+      process.stdout.write(clean)
+    }
+  }
+  process.exit(0)
+}
+
+const report = scanFiles(files)
+console.log(`\nscanned ${files.length} file(s)  ·  score ${report.score}/100  ·  ${report.verdict}\n`)
+for (const f of report.findings) {
+  const mark = f.severity === "critical" ? "✗" : f.severity === "high" ? "!" : "·"
+  console.log(`  ${mark} [${f.severity}] ${f.id}  in ${f.where}  (${f.count}x)`)
+  console.log(`      ${f.excerpt}`)
+  console.log(`      ${f.why}\n`)
+}
+if (!report.findings.length) console.log("  nothing suspicious found\n")
+process.exit(report.bySeverity.critical ? 1 : 0)

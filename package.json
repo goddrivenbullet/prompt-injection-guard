@@ -1,0 +1,43 @@
+{
+  "name": "prompt-injection-guard",
+  "version": "0.1.0",
+  "description": "Agents read rules files, tool descriptions and documentation without a human in the loop. prompt-injection-guard scans the places an agent reads automatically for hidden instructions, invisible characters and embedded commands — and can sanitise them.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "prompt-injection-guard": "bin/prompt-injection-guard.js"
+  },
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "security",
+    "prompt-injection",
+    "agents",
+    "llm",
+    "scanner",
+    "sanitizer",
+    "audit"
+  ],
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "lint": "node --check src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rustemmustafingovua-byte/prompt-injection-guard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rustemmustafingovua-byte/prompt-injection-guard/issues"
+  },
+  "homepage": "https://github.com/rustemmustafingovua-byte/prompt-injection-guard"
+}
