@@ -10,6 +10,19 @@ import { readFileSync, existsSync, readdirSync, statSync } from "node:fs"
 import { join } from "node:path"
 import { scanFiles, sanitise } from "../src/index.js"
 
+// --- CLI shell: --help / --version -------------------------------------------
+const HELP = "prompt-injection-guard — Find the instructions hidden in the files your agent reads by itself.\n\nUSAGE\n  prompt-injection-guard AGENTS.md\n  prompt-injection-guard --dir ~/.config/opencode\n  prompt-injection-guard --sanitise AGENTS.md\n\nCOMMANDS / OPTIONS\n  --dir <path>  scan a directory tree (max depth 3)\n  --sanitise    print the file with comments and invisible characters removed\n\nExit code 1 when a critical finding is present.\n\nMIT · https://github.com/rustemmustafingovua-byte"
+const VERSION = "0.1.0"
+if (process.argv.includes("--help") || process.argv.includes("-h")) {
+  console.log(HELP)
+  process.exit(0)
+}
+if (process.argv.includes("--version") || process.argv.includes("-V")) {
+  console.log(VERSION)
+  process.exit(0)
+}
+
+
 const argv = process.argv.slice(2)
 const arg = (n) => {
   const i = argv.indexOf(n)
