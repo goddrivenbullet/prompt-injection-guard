@@ -44,6 +44,25 @@ prompt-injection-guard --dir ~/.config/opencode
 prompt-injection-guard --sanitise AGENTS.md
 ```
 
+## CLI
+
+```
+prompt-injection-guard — Find the instructions hidden in the files your agent reads by itself.
+
+USAGE
+  prompt-injection-guard AGENTS.md
+  prompt-injection-guard --dir ~/.config/opencode
+  prompt-injection-guard --sanitise AGENTS.md
+
+COMMANDS / OPTIONS
+  --dir <path>  scan a directory tree (max depth 3)
+  --sanitise    print the file with comments and invisible characters removed
+
+Exit code 1 when a critical finding is present.
+
+MIT · https://github.com/rustemmustafingovua-byte
+```
+
 ## Part of a portfolio
 
 | Project | What it does |
