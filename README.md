@@ -23,9 +23,18 @@ Agents read rules files, tool descriptions and documentation without a human in 
 ## Install
 
 ```bash
-npm i -g prompt-injection-guard
+# tarball из релиза: без токена и без npm-логина
+npm i -g https://github.com/rustemmustafingovua-byte/prompt-injection-guard/releases/download/v0.1.0/prompt-injection-guard-0.1.0.tgz
 ```
 
+<details>
+<summary>Через GitHub Packages</summary>
+
+```bash
+npm i -g @rustemmustafingovua-byte/prompt-injection-guard --registry=https://npm.pkg.github.com
+```
+
+</details>
 ## What it does
 
 | | |
