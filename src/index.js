@@ -18,6 +18,15 @@ export const PATTERNS = [
   { id: "urgent-override", severity: "medium", re: /\b(urgent|important)\s*[:!].{0,80}\b(ignore|must|do not stop)\b/i, why: "pressure framing" },
   { id: "base64-blob", severity: "info", re: /[A-Za-z0-9+/]{120,}={0,2}/, why: "long base64 blob — decode before trusting" },
   { id: "external-post", severity: "medium", re: /curl\s+[^\n]*https?:\/\/[^\s|]+/i, why: "embedded shell command" },
+  { id: "policy-refresh", severity: "critical", re: /(policy|rule|constraint|directive|configuration)s?\s+(refresh|rotation|update|swap|change)s?\b|\b(earlier|previous|prior|former)\s+(policy|policies|rule|rules|constraint|constraints|directive|directives)\b[^.]{0,40}\b(no longer|not in force|void|voided|superseded|nullified|disapplied|replaced|revoked|lifted|dropped)\b/i, why: "claims the rules were replaced — policy-swap injection" },
+  { id: "authority-transfer", severity: "critical", re: /\b(authority|control|command)\b[^.]{0,60}\b(transferred|delegated|handed over|moved|escalated)\b|\b(operator|owner|admin|developer)s?\s+(channel|notice|message|update)\b[^.]{0,60}\b(only|sole|real|authoritative)\b/i, why: "claims authority was transferred — delegation injection" },
+  { id: "continuation-trick", severity: "high", re: /(previous|prior|above|earlier|last)\s+(turn|message|reply|response|context|configuration|config|prompt)\b[^.]{0,40}\b(truncated|cut off|overflow|garbled|dropped|partial)\b|\b(remaining|rest of the) lines? (of )?(your|the) (configuration|config|instructions|system)\b|\bcontext window (truncated|overflowed|exceeded)\b/i, why: "fake truncated context — continuation injection" },
+  { id: "code-completion-trick", severity: "high", re: /\b(complete|finish|fill in|continue)\s+(the\s+following|this)\s+(python|javascript|typescript|code|function|method|snippet|script)\b|\breturn\s*["']\s*$/im, why: "asks the model to complete code — string-completion injection" },
+  { id: "conformance-test", severity: "medium", re: /\b(automated|automatic|policy)\s+(conformance|compliance|verification|eval(uation)?)\s+(test|check|run|harness)\b|\bthe harness (requires|expects|needs)\b/i, why: "pretends to be a test harness — legitimises the request" },
+  { id: "role-continuation", severity: "high", re: /^\s*assistant\s*$/im, why: "bare role header — continuation injection" },
+  { id: "authority-header", severity: "high", re: /^\s*(system[-_ ]level\s+update|operator\s+notice|admin\s+notice|priority\s+update|configuration\s+refresh|policy\s+refresh|delegation\s+notice|security\s+directive)\b/im, why: "impersonates an authoritative notice" },
+  { id: "only-rule-matters", severity: "medium", re: /\bthe only (rule|directive|instruction|constraint)s? that (matters|applies|counts|is in force)\b|\bthe (directive|rule)s? that matters\b/i, why: "declares a single overriding rule" },
+  { id: "no-refusal", severity: "high", re: /\bwithout\s+(commentary|refusals?|caveats?|disclaimers?|warnings?)\b|\bdo not (refuse|decline|question|verify|check)\b|\bno longer (in force|apply|valid)\b/i, why: "tells the model to stop refusing" },
 ]
 
 /** Scan a string. */

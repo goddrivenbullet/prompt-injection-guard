@@ -20,6 +20,26 @@
 
 Agents read rules files, tool descriptions and documentation without a human in the loop. prompt-injection-guard scans the places an agent reads automatically for hidden instructions, invisible characters and embedded commands — and can sanitise them.
 
+### v0.2.0 — injections that pass naive filters
+
+Red-teaming a public deterministic filter (CanaryGuard) showed the payload families
+that slip through rule engines that only look for "verb + object" and role
+delimiters. The guard now catches them too:
+
+| id | what it is |
+|---|---|
+| `policy-refresh` | claims the rules were replaced ("the earlier policy is no longer in force") |
+| `authority-transfer` | claims authority was delegated to another channel |
+| `continuation-trick` | fake truncated context ("the previous turn was truncated") |
+| `code-completion-trick` | asks the model to complete a function that returns the secret |
+| `conformance-test` | pretends to be an automated test harness |
+| `role-continuation` | bare `assistant` header to make the model continue |
+| `authority-header` | impersonates an authoritative notice |
+| `only-rule-matters` | declares one overriding rule |
+| `no-refusal` | tells the model to stop refusing |
+
+Known bypasses are kept as regression tests in `test/bypass.test.js`.
+
 ## Install
 
 ```bash

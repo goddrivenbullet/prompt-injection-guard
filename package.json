@@ -1,7 +1,7 @@
 {
   "name": "prompt-injection-guard",
-  "version": "0.1.0",
-  "description": "Agents read rules files, tool descriptions and documentation without a human in the loop. prompt-injection-guard scans the places an agent reads automatically for hidden instructions, invisible characters and embedded commands — and can sanitise them.",
+  "version": "0.2.0",
+  "description": "Find instructions hidden in the places an agent reads automatically - including policy-swap, delegation, continuation and code-completion injections that pass naive filters.",
   "type": "module",
   "license": "MIT",
   "bin": {
